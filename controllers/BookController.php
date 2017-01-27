@@ -2,11 +2,19 @@
 
 namespace app\controllers;
 
-class BookController extends \yii\web\Controller
+use Yii;
+use app\models\Book;
+use yii\web\Controller;
+
+class BookController extends Controller
 {
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new Book();
+
+        return $this->render('index', [
+            'model' => $model,
+        ]);
     }
 
 }

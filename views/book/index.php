@@ -1,9 +1,16 @@
 <?php
 /* @var $this yii\web\View */
 ?>
-<h1>book/index</h1>
+<?php
 
-<p>
-    You may change the content of this page by modifying
-    the file <code><?= __FILE__; ?></code>.
-</p>
+/* @var $this yii\web\View */
+
+$this->title = 'Basic Library: Users Page';
+?>
+<div class="col-md-12">
+    <h3> Browse our library Books </h3>
+    <p class="panel-body">
+        Next stage implementations :)
+    </p>
+</div>
+

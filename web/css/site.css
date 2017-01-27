@@ -24,6 +24,7 @@ body {
     background: #305355;
     margin-top: 20px;
     max-width: 87%;
+    height:100%;
 }
 
 .navbar {
@@ -43,9 +44,12 @@ body {
     background-position: 0 -79px;
     width: 35px;
     height: 43px;
+}
+.book .text{
     color: #ffffff;
     text-align: center;
     font-size: 24px;
+    padding-top: 5px;
 }
 .user{
     background-position: -29px -158px;
@@ -265,6 +269,7 @@ a.desc:after {
 }
 
 hr.fancy-line {
+    padding: 0;
     border: 0;
     height: 1px;
     width: 80%;
@@ -272,10 +277,58 @@ hr.fancy-line {
     background: #333;
 }
 
+hr.line-user-data {
+    padding: 0;
+    border: none;
+    border-top: medium solid #ffffff;
+    color: #ffffff;
+    text-align: center;
+    width: 90%;
+}
+hr.line-user-data:after {
+    content: "USER DATA";
+    display: inline-block;
+    border: solid;
+    position: relative;
+    top: -0.7em;
+    font-size: 16px;
+    padding: 0 0.15em;
+    color: #ffffff;
+    background: #305355;
+}
+
+hr.line-address {
+    padding: 0;
+    border: none;
+    border-top: medium solid #ffffff;
+    color: #ffffff;
+    text-align: center;
+    width: 90%;
+}
+hr.line-address:after {
+    content: "ADDRESS";
+    display: inline-block;
+    border: solid;
+    position: relative;
+    top: -0.7em;
+    font-size: 16px;
+    padding: 0 0.15em;
+    color: #ffffff;
+    background: #305355;
+}
+
 .circular--square {
     border-radius: 50%;
     width: 80px;
     height: 80px;
+}
+
+.book-info-title{
+    width: 50%;
+    float:left;
+}
+.book-info-author{
+    overflow: hidden;
 }
 
 .footer {

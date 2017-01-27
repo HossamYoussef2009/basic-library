@@ -26,36 +26,7 @@ AppAsset::register($this);
 
 <div class="wrap">
 
-    <?php
-    NavBar::begin([
-        'brandLabel' => '<div class="sprite logo"></div>',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar navbar-default navbar-fixed-top',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => '<span class="glyphicon glyphicon-home"></span> Home', 'url' => ['/site/index']],
-            ['label' => '<span class="glyphicon glyphicon-question-sign">About', 'url' => ['/site/about']],
-            Yii::$app->user->isGuest ? (
-            ['label' => '<span class="glyphicon glyphicon-user">Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    '<span class="glyphicon glyphicon-off">Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
-        'encodeLabels' => false,
-    ]);
-    NavBar::end();
-    ?>
+    <?= $this->render('navbar'); ?>
 
     <div class="container">
         <div class="col-md-1 tabbable tabs-left">
@@ -90,13 +61,7 @@ AppAsset::register($this);
     </div>
 </div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; BookingKit.de Applicant Test <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
+<?= $this->render('footer'); ?>
 
 <?php $this->endBody() ?>
 </body>

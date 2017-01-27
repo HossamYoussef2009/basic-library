@@ -14,7 +14,7 @@ use Yii;
  * @property string $created_at
  *
  * @property Book $book
- * @property User $user
+ * @property UserModel $user
  */
 class UserBook extends \yii\db\ActiveRecord
 {
@@ -66,6 +66,6 @@ class UserBook extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(UserModel::className(), ['id' => 'user_id']);
     }
 }

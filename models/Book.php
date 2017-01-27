@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\repositories\BookQuery;
 use Yii;
 
 /**
@@ -24,6 +25,10 @@ class Book extends \yii\db\ActiveRecord
         return 'book';
     }
 
+    public static function find()
+    {
+        return new BookQuery(get_called_class());
+    }
     /**
      * @inheritdoc
      */
@@ -50,10 +55,11 @@ class Book extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return $this
      */
-    public function getUserBooks()
+    public function getUsers()
     {
-        return $this->hasMany(UserBook::className(), ['book_id' => 'id']);
+        return $this->hasMany(UserModel::className(), ['id' => 'user_id'])
+            ->viaTable('user_book', ['book_id' => 'id']);
     }
 }
