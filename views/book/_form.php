@@ -13,13 +13,14 @@
         ->select(['id', 'title'])
         ->column();
 
+    $model = new \app\models\Book();
+
     echo $form->field($model, 'title', [
         'inputOptions' => [
-            'placeholder' => 'Choose a book *',
             'class' => 'form-control',
             'required' => true
         ],
-    ])->dropdownList(array_merge(['' => 'Choose a book'], $books))->label(false);
+    ])->dropdownList($books, ['prompt'=>'Choose a book *'])->label(false);
 
     ?>
 </div>

@@ -20,7 +20,7 @@ $this->title = 'Basic Library: Users Page';
                 ]);
                 ?>
         <div id='add-user-form' style='display:none;'>
-            <?= $this->render('/user/_form', ['model' => $model]); ?>
+            <?= $this->render('/user/_form'); ?>
         </div>
     </div>
 
@@ -63,7 +63,7 @@ $this->title = 'Basic Library: Users Page';
                 </div>
             <?php } ?>
             <div id='add-book-form-<?=$user->id; ?>' style='display:none;'>
-                <?= $this->render('/book/_form', ['model' => $book]); ?>
+                <?= $this->render('/book/_form'); ?>
             </div>
         </div>
 

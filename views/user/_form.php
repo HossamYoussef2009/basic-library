@@ -8,6 +8,8 @@
         'enableAjaxValidation' => true,
         'validationUrl' => 'validation-rul',
     ]);
+
+    $model = new \app\models\UserModel();
     ?>
     <div class="row">
         <div class="col-sm-4">
