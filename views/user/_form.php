@@ -1,15 +1,19 @@
 <div class="col-md-12 dark-form">
 
     <br><hr class="line-user-data"><br>
-    <?php $form = \yii\widgets\ActiveForm::begin([
-        'id' => 'add-user-form',
+    <?php
+    $form = \yii\widgets\ActiveForm::begin([
+        'id' => 'save-user',
+        'method' => 'post',
+        'action' => ['user/save'],
         'class' => 'form-inline',
-        'action' => 'save-url',
         'enableAjaxValidation' => true,
-        'validationUrl' => 'validation-rul',
+        'enableClientValidation' => false,
+        'options' => [
+            'enctype' => 'multipart/form-data',
+            'autocomplete' => 'off'
+        ],
     ]);
-
-    $model = new \app\models\UserModel();
     ?>
     <div class="row">
         <div class="col-sm-4">

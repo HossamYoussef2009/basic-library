@@ -16,5 +16,4 @@ class BookController extends Controller
             'model' => $model,
         ]);
     }
-
 }

@@ -3,6 +3,7 @@
 /* @var $this yii\web\View */
 use yii\widgets\LinkPager;
 use yii\base\view;
+use yii\helpers\Url;
 
 $this->title = 'Basic Library: Users Page';
 ?>
@@ -20,7 +21,7 @@ $this->title = 'Basic Library: Users Page';
                 ]);
                 ?>
         <div id='add-user-form' style='display:none;'>
-            <?= $this->render('/user/_form'); ?>
+            <?= $this->render('/user/_form', ['model' => $model]); ?>
         </div>
     </div>
 
@@ -36,7 +37,7 @@ $this->title = 'Basic Library: Users Page';
     <div class="row">
         <hr class="fancy-line">
         <div class="col-md-1">
-            <img src="/images/hossam.png" class="circular--square"/>
+            <img src="<?= Url::to('@web/images/hossam.png'); ?>" class="circular--square"/>
         </div>
         <div class="col-md-3">
             <p class="lead">
@@ -63,7 +64,11 @@ $this->title = 'Basic Library: Users Page';
                 </div>
             <?php } ?>
             <div id='add-book-form-<?=$user->id; ?>' style='display:none;'>
-                <?= $this->render('/book/_form'); ?>
+                <?= $this->render('/book/_form', [
+                    'model' => $books_model,
+                    'books_items' => $books_items,
+                    'user_id' => $user->id
+                ]); ?>
             </div>
         </div>
 

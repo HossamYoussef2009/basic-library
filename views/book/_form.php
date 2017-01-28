@@ -1,31 +1,28 @@
 <div class="col-sm-9">
     <?php
     $form = \yii\widgets\ActiveForm::begin([
-        'id' => 'lend-book-form',
+        'id' => 'lend-book-id',
         'class' => 'form-inline',
         'action' => 'lend-book',
         'enableAjaxValidation' => true,
-        'validationUrl' => 'validation-rul',
+        'validationUrl' => 'validate-lend-book',
     ]);
-
-    $books = \app\models\Book::find()
-        ->active()
-        ->select(['id', 'title'])
-        ->column();
-
-    $model = new \app\models\Book();
-
-    echo $form->field($model, 'title', [
+    
+    echo $form->field($model, 'book_id', [
         'inputOptions' => [
             'class' => 'form-control',
             'required' => true
         ],
-    ])->dropdownList($books, ['prompt'=>'Choose a book *'])->label(false);
+    ])->dropdownList($books_items, ['prompt'=>'Choose a book *'])->label(false);
+
+    echo $form->field($model, 'user_id')->hiddenInput([
+        'value' => $user_id
+    ])->label(false);
 
     ?>
 </div>
-<div class="col-sm-3">
 
+<div class="col-sm-3">
     <?php
     echo \yii\bootstrap\Html::submitButton('Save', ['class' => 'btn btn-success']);
 
