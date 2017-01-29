@@ -3,14 +3,12 @@
 namespace app\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "user".
  *
  * @property integer $id
- * @property string $login
- * @property string $password
- * @property integer $role
  * @property string $salutation
  * @property string $title
  * @property string $first_name
@@ -28,11 +26,16 @@ use Yii;
 class UserModel extends \yii\db\ActiveRecord
 {
     /**
+     * @var UploadedFile
+     */
+    public $photo;
+
+    /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'user';
+        return '{{user}}';
     }
 
     /**
@@ -41,14 +44,12 @@ class UserModel extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['login', 'password'], 'required'],
-            [['role'], 'integer'],
-            [['description'], 'string'],
+            [['title', 'first_name', 'last_name', 'city', 'street', 'zip', 'house_number'], 'required'],
+            [['description'], 'string', 'min' => 8],
             [['registered_at'], 'safe'],
-            [['login', 'salutation', 'title', 'first_name', 'last_name', 'city', 'street'], 'string', 'max' => 100],
-            [['password'], 'string', 'max' => 255],
-            [['zip', 'house_number'], 'string', 'max' => 16],
+            [['salutation', 'title', 'first_name', 'last_name', 'city', 'street', 'photo'], 'string', 'max' => 100],
             [['photo'], 'string', 'max' => 128],
+            [['zip', 'house_number'], 'string', 'max' => 16],
         ];
     }
 
@@ -69,35 +70,6 @@ class UserModel extends \yii\db\ActiveRecord
             ->viaTable('user_book', ['user_id' => 'id']);
     }
 
-    public function upload()
-    {
-        if (!isset($this->photo)) {
-            return true;
-        }
-        $dir =  'uploads/img/authors/'. $this->getAttribute('id');
-        if ($this->validate()) {
-            if (file_exists($dir)) {// Check if file exists ->
-                $files = scandir($dir);// get all folder files ->
-                foreach ($files as $file) { //delete files if it is not "." or ".."(delete user photo)
-                    if ($file != "." && $file != "..") {
-                        unlink($dir."/".$file);
-                    }
-                }/////////////////////////////////////////////////////////////////////////////////////
-            } else {
-                mkdir($dir, 0777, true);
-            }
-            $this->photo->saveAs($dir. '/'. $this->photo->baseName . '.' . $this->photo->extension);
-            $this->photo_path = $dir. '/'. $this->photo->baseName . '.' . $this->photo->extension;
-            $this->photo = null;
-            if (!$this->save()) {
-                return false;
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * @inheritdoc
      */
@@ -105,9 +77,6 @@ class UserModel extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'login' => 'Login',
-            'password' => 'Password',
-            'role' => 'Role',
             'salutation' => 'Salutation',
             'title' => 'Title',
             'first_name' => 'First Name',

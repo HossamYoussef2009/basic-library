@@ -51,7 +51,12 @@ AppAsset::register($this);
         <div class="col-md-11 white-layout">
             <div class="tab-content layout">
                 <div class="tab-pane active" id="a">
+
                     <div class="container">
+                        <div class="row">
+                            <div class="col-sm-10" id="view-response"></div>
+                        </div>
+
                         <?= $content ?>
                     </div>
                 </div>

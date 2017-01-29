@@ -18,6 +18,8 @@ use Yii;
  */
 class UserBook extends \yii\db\ActiveRecord
 {
+    static $LEND_LIMIT = 8;
+    static $LEND_STATUS_ACTIVE = 1;
     /**
      * @inheritdoc
      */
@@ -32,10 +34,12 @@ class UserBook extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['user_id', 'book_id'], 'required'],
+            //['user_id', 'unique', 'targetAttribute' => 'book_id'],
             [['user_id', 'book_id', 'status'], 'integer'],
             [['created_at'], 'safe'],
             [['book_id'], 'exist', 'skipOnError' => true, 'targetClass' => Book::className(), 'targetAttribute' => ['book_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserModel::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -68,4 +72,37 @@ class UserBook extends \yii\db\ActiveRecord
     {
         return $this->hasOne(UserModel::className(), ['id' => 'user_id']);
     }
+
+    public function lendBook($data)
+    {
+        if (! $this->hasMaxLend($data['UserBook']['user_id'])) {
+        $this->triggerBooksVersions($data['UserBook']['book_id']);
+
+            $userBook = new UserBook();
+            $userBook->load($data);
+            $userBook->status = $this::$LEND_STATUS_ACTIVE;
+
+            return $userBook->save();
+        }
+
+        return false;
+    }
+
+    public function hasMaxLend($userId)
+    {
+        $recordsCount = UserBook::find()
+            ->where([
+                'user_id' => $userId,
+                'status' => UserBook::$LEND_STATUS_ACTIVE,
+            ])
+            ->count();
+
+        return ($recordsCount < $this::$LEND_LIMIT) ? false: true;
+    }
+
+    protected function triggerBooksVersions($bookId)
+    {
+        Yii::$app->db->createCommand("UPDATE book SET versions=versions-1 WHERE id=$bookId ")->execute();
+    }
+
 }

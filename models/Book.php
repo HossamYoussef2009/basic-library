@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\repositories\BookQuery;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "book".
@@ -25,10 +26,6 @@ class Book extends \yii\db\ActiveRecord
         return 'book';
     }
 
-    public static function find()
-    {
-        return new BookQuery(get_called_class());
-    }
     /**
      * @inheritdoc
      */
@@ -61,5 +58,19 @@ class Book extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserModel::className(), ['id' => 'user_id'])
             ->viaTable('user_book', ['book_id' => 'id']);
+    }
+
+    public function getBooksList()
+    {
+        return ArrayHelper::map(
+            Book::find()->active()->all(),
+            'id',
+            'title'
+        );
+    }
+
+    public static function find()
+    {
+        return new BookQuery(get_called_class());
     }
 }

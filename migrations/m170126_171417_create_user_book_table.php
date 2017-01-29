@@ -60,6 +60,30 @@ class m170126_171417_create_user_book_table extends Migration
      */
     public function down()
     {
+        // drops foreign key for table `user`
+        $this->dropForeignKey(
+            'fk-user_book-user_id',
+            'user_book'
+        );
+
+        // drops index for column `user_id`
+        $this->dropIndex(
+            'fk-user_book-user_id',
+            'user_book'
+        );
+
+        // drops foreign key for table `book`
+        $this->dropForeignKey(
+            'fk-user_book-book_id',
+            'user_book'
+        );
+
+        // drops index for column `book_id`
+        $this->dropIndex(
+            'fk-user_book-book_id',
+            'user_book'
+        );
+
         $this->dropTable('user_book');
     }
 }

@@ -2,74 +2,62 @@
 
 namespace app\controllers;
 
-use app\models\UserBook;
 use Yii;
-use yii\filters\VerbFilter;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\Controller;
+use yii\widgets\ActiveForm;
+use yii\web\NotFoundHttpException;
 
-use app\models\User;
-use app\models\Book;
+use app\models\UserBook;
 
 class LendController extends Controller
 {
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'lend-book' => ['post'],
-                    'validate-lend-book' => ['get'],
-                ],
-            ],
-        ];
-    }
-
-    public function actionLendBook($id) {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-
-            return $this->redirect(['view', 'id' => (string) $model->_id]);
-        }elseif (Yii::$app->request->isAjax) {
-
-            return $this->renderAjax('_form', [
-                'model' => $model
-            ]);
-        } else {
-
-            return $this->render('_form', [
-                'model' => $model
-            ]);
-        }
-    }
-
-    public function actionValidateLendBook()
-    {
-        $model = new UserBook();
-        $request = \Yii::$app->getRequest();
-
-        if ($request->isPost && $model->load($request->post())) {
-            // here should check No of books per user in a separate function.
-
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-
-            return ActiveForm::validate($model);
-        }
-    }
-
+    /**
+     * @return array
+     */
     public function actionSave()
     {
         $model = new UserBook();
+
+        $request = Yii::$app->getRequest();
+        if ($request->isPost) {
+            if ($model->lendBook($request->post())) {
+                $response = Yii::$app->response;
+                $response->format = Response::FORMAT_JSON;
+
+                return $response->data = [
+                    'result' => 'success',
+                ];
+            }
+        }
+    }
+
+    /**
+     * @return array
+     * @throws NotFoundHttpException
+     */
+    public function actionValidate()
+    {
+        if (!Yii::$app->request->isAjax) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        $model = new UserBook();
+
         $request = \Yii::$app->getRequest();
 
         if ($request->isPost && $model->load($request->post())) {
-            \Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['success' => $model->save()];
-        }
 
-        // return
+            if ($model->hasMaxLend(Yii::$app->request->post('UserBook[user_id]'))) {
+                $response = Yii::$app->response;
+                $response->format = Response::FORMAT_JSON;
+
+                return $response->data = [
+                    'result' => 'Exceed maximum limit',
+                ];
+            }
+
+            return ActiveForm::validate($model);
+        }
     }
 }

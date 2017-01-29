@@ -2,18 +2,25 @@
 
 namespace app\controllers;
 
-use app\models\User;
+use app\models\UploadForm;
+use Yii;
+use yii\web\Response;
+use yii\web\Controller;
+use yii\data\Pagination;
+use yii\web\UploadedFile;
+use yii\widgets\ActiveForm;
+use yii\web\NotFoundHttpException;
+
 use app\models\Book;
 use app\models\UserBook;
 use app\models\UserModel;
-use yii\data\Pagination;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 
-class UserController extends \yii\web\Controller
+class UserController extends Controller
 {
     public function actionIndex()
     {
+        $bookModel = new Book();
+
         $query = UserModel::find();
         $queryCount = clone $query;
         $pagination = new Pagination(['totalCount' => $queryCount->count()]);
@@ -21,91 +28,67 @@ class UserController extends \yii\web\Controller
             ->limit($pagination->limit)
             ->all();
 
-        $availableBooksItems = ArrayHelper::map(
-            Book::find()->active()->all(),
-            'id',
-            'title'
-        );
-
         return $this->render('index', [
             'model' => new UserModel(),
             'users' => $users,
             'pagination' => $pagination,
             'books_model' => new UserBook(),
-            'books_items' => $availableBooksItems
+            'books_items' => $bookModel->getBooksList()
         ]);
     }
 
     /**
-     * @param $id
-     * @return string|\yii\web\Response
+     * @return array
      */
-    public function actionSave($id) {
+    public function actionSave()
+    {
         $model = new UserModel();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        $request = Yii::$app->getRequest();
+        if ($request->isPost && $model->load($request->post())) {
 
-            return $this->redirect(['view', 'id' => (string) $model->_id]);
-        }elseif (Yii::$app->request->isAjax) {
+            $uploadFile = new UploadForm();
 
-            return $this->renderAjax('_form', [
-                'model' => $model
-            ]);
-        } else {
+            $uploadFile->photo = UploadedFile::getInstance($uploadFile, 'photo');
 
-            return $this->render('_form', [
-                'model' => $model
-            ]);
-        }
-    }
+            if ($uploadFile->validate()) {
+                $uploadFile->photo->saveAs('uploads/images/user/' . $uploadFile->photo->baseName . '.' . $uploadFile->photo->extension);
+//                $uploadFile->upload();
+                $model->photo = $uploadFile->photo->baseName . '.' . $uploadFile->photo->extension;
+            }
 
-    public function actionCreate()
-    {
-        $model = new User();
+            if ($model->save()) {
+                $response = Yii::$app->response;
+                $response->format = Response::FORMAT_JSON;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
+                return $response->data = [
+                    'result' => 'success',
+                ];
+            }
 
-            return $response->data = [
-                'result' => 'success',
-            ];
-        } else {
-            // Error Resposnse
-        }
-    }
-
-    public function actionValidate($id = null)
-    {
-        if (!Yii::$app->request->isAjax) {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-
-        if ($id === null) {
-            $model = new Student();
-        } else {
-            $model = $this->findModel($id);
-        }
-
-        if ($model->load(Yii::$app->request->post())) {
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-
-            return ActiveForm::validate($model);
         }
     }
 
     /**
-     * @param integer $id
-     * @return UserModel
-     * @throws NotFoundHttpException if the model cannot be found
+     * @return array
+     * @throws NotFoundHttpException
      */
-    protected function findModel($id)
+    public function actionValidate()
     {
-        if (($model = UserModel::findOne($id)) !== null) {
-            return $model;
-        } else {
+        if (!Yii::$app->request->isPost) {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+
+        $model = new UserBook();
+
+        $request = \Yii::$app->getRequest();
+
+        if ($request->isPost && $model->load($request->post())) {
+
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            return ActiveForm::validate($model);
         }
     }
 }

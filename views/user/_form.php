@@ -3,16 +3,14 @@
     <br><hr class="line-user-data"><br>
     <?php
     $form = \yii\widgets\ActiveForm::begin([
-        'id' => 'save-user',
-        'method' => 'post',
-        'action' => ['user/save'],
-        'class' => 'form-inline',
-        'enableAjaxValidation' => true,
-        'enableClientValidation' => false,
         'options' => [
-            'enctype' => 'multipart/form-data',
-            'autocomplete' => 'off'
+            'class' => 'save-user',
+            'enctype' => 'multipart/form-data'
         ],
+        'class' => 'form-inline',
+        'action' =>  ['user/save'],
+        'enableAjaxValidation' => false,
+        'enableClientValidation' => true,
     ]);
     ?>
     <div class="row">
@@ -21,8 +19,7 @@
                 'template' => '<div class="input-group"><span class="input-group-addon">+</span>{input}</div>',
                 'inputOptions' => [
                     'placeholder' => $model->getAttributeLabel('salutation') . ' *',
-                    'class' => 'form-control',
-                    'required' => true
+                    'class' => 'form-control'
                 ],
             ])->dropdownList([
                 'Mr' => 'Mr',
@@ -61,8 +58,7 @@
                 'template' => '<div class="input-group"><span class="input-group-addon">+</span>{input}</div>',
                 'inputOptions' => [
                     'placeholder' => $model->getAttributeLabel('first_name') . ' *',
-                    'class' => 'form-control',
-                    'required' => true
+                    'class' => 'form-control'
                 ],
             ])->label(false);
             ?>
@@ -70,8 +66,7 @@
                 'template' => '<div class="input-group"><span class="input-group-addon">+</span>{input}</div>',
                 'inputOptions' => [
                     'placeholder' => $model->getAttributeLabel('last_name') . ' *',
-                    'class' => 'form-control',
-                    'required' => true
+                    'class' => 'form-control'
                 ],
             ])->label(false);
             ?>
@@ -100,8 +95,7 @@
                 'template' => '<div class="input-group"><span class="input-group-addon">+</span>{input}</div>',
                 'inputOptions' => [
                     'placeholder' => $model->getAttributeLabel('street') . ' *',
-                    'class' => 'form-control',
-                    'required' => true
+                    'class' => 'form-control'
                 ],
             ])->label(false);
             ?>
@@ -112,8 +106,7 @@
                 'template' => '<div class="input-group"><span class="input-group-addon">+</span>{input}</div>',
                 'inputOptions' => [
                     'placeholder' => $model->getAttributeLabel('house_number') . ' *',
-                    'class' => 'form-control',
-                    'required' => true
+                    'class' => 'form-control'
                 ],
             ])->label(false);
             ?>
@@ -127,8 +120,7 @@
                 'template' => '<div class="input-group"><span class="input-group-addon">+</span>{input}</div>',
                 'inputOptions' => [
                     'placeholder' => $model->getAttributeLabel('city') . ' *',
-                    'class' => 'form-control',
-                    'required' => true
+                    'class' => 'form-control'
                 ],
             ])->label(false);
             ?>
@@ -152,5 +144,4 @@
         </div>
     </div>
     <?php $form->end(); ?>
-
 </div>

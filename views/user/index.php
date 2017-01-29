@@ -37,11 +37,16 @@ $this->title = 'Basic Library: Users Page';
     <div class="row">
         <hr class="fancy-line">
         <div class="col-md-1">
-            <img src="<?= Url::to('@web/images/hossam.png'); ?>" class="circular--square"/>
+            <img src="<?php
+            if ($user->photo != null) {
+                echo Url::to('@uploads/images/user/' . $user->photo);
+            }else{
+                echo Url::to('@web/images/user.png');
+            } ?>" class="circular--square"/>
         </div>
         <div class="col-md-3">
             <p class="lead">
-                <?=$user->first_name . ' ' .$user->first_name; ?>
+                <?=$user->first_name . ' ' .$user->last_name; ?>
             </p>
             <small>
                 <?=$user->city . ' ' .$user->zip; ?>
@@ -62,18 +67,22 @@ $this->title = 'Basic Library: Users Page';
                 <div class="book-info-author">
                     - <?=$book->author; ?>
                 </div>
+
             <?php } ?>
-            <div id='add-book-form-<?=$user->id; ?>' style='display:none;'>
-                <?= $this->render('/book/_form', [
-                    'model' => $books_model,
-                    'books_items' => $books_items,
-                    'user_id' => $user->id
-                ]); ?>
-            </div>
+                <?php
+                if($user->booksCount < $books_model::$LEND_LIMIT) {
+                    echo $this->render('/book/_form', [
+                        'model' => $books_model,
+                        'books_items' => $books_items,
+                        'user_id' => $user->id
+                    ]);
+                }
+                ?>
         </div>
 
         <div class="col-md-1 right">
             <?php
+            if($user->booksCount < $books_model::$LEND_LIMIT) {
                 echo \yii\bootstrap\Button::Widget([
                     'label' => '',
                     'options'=>[
@@ -83,6 +92,7 @@ $this->title = 'Basic Library: Users Page';
                         'data-toggle' => $user->id
                     ],
                 ]);
+            }
             ?>
         </div>
 
