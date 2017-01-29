@@ -326,9 +326,11 @@ hr.line-address:after {
 .book-info-title{
     width: 50%;
     float:left;
+    font-size: 12px;
 }
 .book-info-author{
     overflow: hidden;
+    font-size: 12px;
 }
 
 .footer {
