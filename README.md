@@ -36,6 +36,7 @@ php yii seed
 
 ### TODO List: according to the time limitation
 - Manage a service for error messages
+- Show user-books by ajax response too!
 - Unit Test
 - code refactoring
 
